@@ -5,6 +5,11 @@ TagManager:
   serializedVersion: 2
   tags:
   - Enemy
+  - Coin
+  - Star
+  - Flower
+  - RedMushroom
+  - Invincible
   layers:
   - Default
   - TransparentFX

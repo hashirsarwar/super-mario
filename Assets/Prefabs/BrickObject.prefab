@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2109802737371809384}
   - component: {fileID: 2109802737371809385}
+  - component: {fileID: 1735905574360115233}
+  - component: {fileID: -2975162585805192556}
   m_Layer: 0
   m_Name: BrickObject
   m_TagString: Untagged
@@ -86,6 +88,107 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!61 &1735905574360115233
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2109802737371809386}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 0.16, y: 0.16}
+    newSize: {x: 0.16, y: 0.16}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.16, y: 0.16}
+  m_EdgeRadius: 0
+--- !u!114 &-2975162585805192556
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2109802737371809386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6a7648521b4f4f4d8f3a147f8cdae47, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  brickObjects: 0
+  numOfCoins: 1
+--- !u!50 &1189875343684345082
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2109802737445928912}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 4
+--- !u!61 &6239214368896583494
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2109802737445928912}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 0.16, y: 0.16}
+    newSize: {x: 0.16, y: 0.16}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.16, y: 0.16}
+  m_EdgeRadius: 0
+--- !u!114 &7211594819485429392
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2109802737445928912}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cff312c94c976e8488b1ae42c649e655, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 2.3
+  stopMoving: 0
 --- !u!1001 &292794246308515634
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -97,6 +200,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_RootOrder
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1826122484766945501, guid: 5e21bee15b9606c4bbc7794ee68e3806,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1826122484766945501, guid: 5e21bee15b9606c4bbc7794ee68e3806,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1826122484766945501, guid: 5e21bee15b9606c4bbc7794ee68e3806,
         type: 3}
@@ -153,8 +266,19 @@ PrefabInstance:
       propertyPath: m_Name
       value: MushroomRed
       objectReference: {fileID: 0}
+    - target: {fileID: 1826122484766945506, guid: 5e21bee15b9606c4bbc7794ee68e3806,
+        type: 3}
+      propertyPath: m_TagString
+      value: RedMushroom
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5e21bee15b9606c4bbc7794ee68e3806, type: 3}
+--- !u!1 &2109802737445928912 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1826122484766945506, guid: 5e21bee15b9606c4bbc7794ee68e3806,
+    type: 3}
+  m_PrefabInstance: {fileID: 292794246308515634}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2109802737445928943 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1826122484766945501, guid: 5e21bee15b9606c4bbc7794ee68e3806,
@@ -173,10 +297,30 @@ PrefabInstance:
       propertyPath: m_Name
       value: Coin
       objectReference: {fileID: 0}
+    - target: {fileID: 2004046518883207632, guid: 18cf5654d7c778146b09d772212785cf,
+        type: 3}
+      propertyPath: m_TagString
+      value: Coin
+      objectReference: {fileID: 0}
     - target: {fileID: 2004046518883207639, guid: 18cf5654d7c778146b09d772212785cf,
         type: 3}
       propertyPath: m_RootOrder
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2004046518883207639, guid: 18cf5654d7c778146b09d772212785cf,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2004046518883207639, guid: 18cf5654d7c778146b09d772212785cf,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2004046518883207639, guid: 18cf5654d7c778146b09d772212785cf,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2004046518883207639, guid: 18cf5654d7c778146b09d772212785cf,
         type: 3}
@@ -248,9 +392,24 @@ PrefabInstance:
       propertyPath: m_Name
       value: Flower
       objectReference: {fileID: 0}
+    - target: {fileID: 781958312774712078, guid: 172645ad4b4f67746862c66aef69c82b,
+        type: 3}
+      propertyPath: m_TagString
+      value: Flower
+      objectReference: {fileID: 0}
     - target: {fileID: 781958312774712079, guid: 172645ad4b4f67746862c66aef69c82b,
         type: 3}
       propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 781958312774712079, guid: 172645ad4b4f67746862c66aef69c82b,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 781958312774712079, guid: 172645ad4b4f67746862c66aef69c82b,
+        type: 3}
+      propertyPath: m_LocalScale.y
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 781958312774712079, guid: 172645ad4b4f67746862c66aef69c82b,
@@ -325,6 +484,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3513841473477903284, guid: 055a86e87f28be54488792db8dbb61d2,
         type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3513841473477903284, guid: 055a86e87f28be54488792db8dbb61d2,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3513841473477903284, guid: 055a86e87f28be54488792db8dbb61d2,
+        type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -376,6 +545,11 @@ PrefabInstance:
     - target: {fileID: 3513841473477903285, guid: 055a86e87f28be54488792db8dbb61d2,
         type: 3}
       propertyPath: m_Name
+      value: Star
+      objectReference: {fileID: 0}
+    - target: {fileID: 3513841473477903285, guid: 055a86e87f28be54488792db8dbb61d2,
+        type: 3}
+      propertyPath: m_TagString
       value: Star
       objectReference: {fileID: 0}
     m_RemovedComponents: []
