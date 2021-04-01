@@ -15,6 +15,9 @@ public class PlayerController : MonoBehaviour
     private RuntimeAnimatorController smallMarioAnimator;
     private float blinkTime = 0.2f;
     private float blinkDuration = 0.038f;
+    public RuntimeAnimatorController fireEnabledMario;
+    private bool fireEnabled = false;
+    public GameObject marioFire;
 
     void Start()
     {
@@ -66,6 +69,26 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    void Update()
+    {
+        if (fireEnabled && Input.GetKeyDown(KeyCode.Z))
+        {
+            GameObject fire = Instantiate(marioFire,
+                                          new Vector2(transform.position.x - 0.3f,
+                                          transform.position.y + 0.1f),
+                                          Quaternion.identity);
+            fire.GetComponent<Rigidbody2D>().AddForce(new Vector2(-2.6f, 0.6f) * 80);
+            StartCoroutine(PlayFireAnimation());
+        }
+    }
+
+    IEnumerator PlayFireAnimation()
+    {
+        animator.SetBool("moving", true);
+        yield return new WaitForSeconds(4);
+        animator.SetBool("moving", false);
+    }
+
     void OnCollisionEnter2D(Collision2D col)
     {
         if (col.gameObject.tag == "Enemy" && this.gameObject.tag != "Invincible")
@@ -90,11 +113,7 @@ public class PlayerController : MonoBehaviour
                 }
                 else if (health == 100)
                 {
-                    health = 50;
-                    GetComponent<SpriteRenderer>().sprite = smallMarioSprite;
-                    GetComponent<Animator>().runtimeAnimatorController = smallMarioAnimator;
-                    GetComponent<BoxCollider2D>().size -= new Vector2(0, 0.15f);
-                    StartCoroutine(MakeInvincible(blinkDuration, blinkTime));
+                    DecreasePlayerHealth();
                 }
             }
         }
@@ -102,20 +121,37 @@ public class PlayerController : MonoBehaviour
         else if (col.gameObject.tag == "RedMushroom")
         {
             Destroy(col.gameObject);
-            IncreasePlayerHealth();
+            if (health == 50)
+            {
+                IncreasePlayerHealth();
+            }
         }
+
+        else if (col.gameObject.tag == "Star")
+        {
+            Destroy(col.gameObject);
+            GetComponent<Animator>().runtimeAnimatorController = fireEnabledMario;
+            fireEnabled = true;
+        }
+    }
+
+    void DecreasePlayerHealth()
+    {
+        health = 50;
+        fireEnabled = false;
+        GetComponent<SpriteRenderer>().sprite = smallMarioSprite;
+        GetComponent<Animator>().runtimeAnimatorController = smallMarioAnimator;
+        GetComponent<BoxCollider2D>().size -= new Vector2(0, 0.15f);
+        StartCoroutine(MakeInvincible(blinkDuration, blinkTime));
     }
 
     void IncreasePlayerHealth()
     {
-        if (health == 50)
-        {
-            health = 100;
-            GetComponent<SpriteRenderer>().sprite = bigMarioSprite;
-            GetComponent<Animator>().runtimeAnimatorController = bigMarioAnimator;
-            GetComponent<BoxCollider2D>().size += new Vector2(0, 0.15f);
-            StartCoroutine(MakeInvincible(blinkDuration, blinkTime));
-        }
+        health = 100;
+        GetComponent<SpriteRenderer>().sprite = bigMarioSprite;
+        GetComponent<Animator>().runtimeAnimatorController = bigMarioAnimator;
+        GetComponent<BoxCollider2D>().size += new Vector2(0, 0.15f);
+        StartCoroutine(MakeInvincible(blinkDuration, blinkTime));
     }
 
     IEnumerator MakeInvincible(float duration, float time)

@@ -50,6 +50,7 @@ SpriteRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -147,6 +148,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cam: {fileID: 2385342804509669449, guid: 5c16d30166c38f345bacbefe3cad30a7, type: 3}
   animator: {fileID: 1884820162911305139}
+  bigMarioSprite: {fileID: -6438430633574223035, guid: 658456b6b5e51c949ac0062a0ac8062b,
+    type: 3}
+  bigMarioAnimator: {fileID: 9100000, guid: 376cb1ea660265c45bbd8ce5d126b25a, type: 2}
+  fireEnabledMario: {fileID: 22100000, guid: e74a1f39aebc7644486ed9dcbd380db3, type: 2}
+  marioFire: {fileID: 749816613791377070, guid: a8f108a062225e94888270ce4b8229ca,
+    type: 3}
 --- !u!95 &1884820162911305139
 Animator:
   serializedVersion: 3
