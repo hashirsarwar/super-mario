@@ -27,23 +27,26 @@ public class MoveObject : MonoBehaviour
         {
             transform.position += new Vector3(-speed, 0, 0) * Time.deltaTime;
         }
-        
+
     }
 
     void OnCollisionEnter2D(Collision2D col)
     {
-        if (transform.position.y <= floorYPos)
+        if (col.gameObject.tag != "Floor")
         {
-            if (movingRight)
+            if (transform.position.y <= floorYPos)
             {
-                movingLeft = true;
-                movingRight = false;
-            }
+                if (movingRight)
+                {
+                    movingLeft = true;
+                    movingRight = false;
+                }
 
-            else
-            {
-                movingLeft = false;
-                movingRight = true;
+                else
+                {
+                    movingLeft = false;
+                    movingRight = true;
+                }
             }
         }
     }

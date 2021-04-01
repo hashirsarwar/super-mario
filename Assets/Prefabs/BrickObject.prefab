@@ -1,5 +1,31 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!61 &1183984902533289409
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2109802736886557247}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 0.16, y: 0.16}
+    newSize: {x: 0.16, y: 0.16}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.16, y: 0.16}
+  m_EdgeRadius: 0
 --- !u!1 &2109802737371809386
 GameObject:
   m_ObjectHideFlags: 0
@@ -52,7 +78,6 @@ SpriteRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -129,6 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   brickObjects: 0
   numOfCoins: 1
+  player: {fileID: 1884820162911305138, guid: 12573cd44ef686c41ab8df91d8863e5e, type: 3}
 --- !u!50 &1189875343684345082
 Rigidbody2D:
   serializedVersion: 4
@@ -374,6 +400,11 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Coin
       objectReference: {fileID: 0}
+    - target: {fileID: 2004046518883207638, guid: 18cf5654d7c778146b09d772212785cf,
+        type: 3}
+      propertyPath: m_SortingOrder
+      value: -1
+      objectReference: {fileID: 0}
     - target: {fileID: 2004046518883207639, guid: 18cf5654d7c778146b09d772212785cf,
         type: 3}
       propertyPath: m_RootOrder
@@ -459,6 +490,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2109802737371809384}
     m_Modifications:
+    - target: {fileID: 781958312774712076, guid: 172645ad4b4f67746862c66aef69c82b,
+        type: 3}
+      propertyPath: m_SortingOrder
+      value: -1
+      objectReference: {fileID: 0}
     - target: {fileID: 781958312774712078, guid: 172645ad4b4f67746862c66aef69c82b,
         type: 3}
       propertyPath: m_Name
@@ -536,6 +572,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 172645ad4b4f67746862c66aef69c82b, type: 3}
+--- !u!1 &2109802736886557247 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 781958312774712078, guid: 172645ad4b4f67746862c66aef69c82b,
+    type: 3}
+  m_PrefabInstance: {fileID: 1701679616656970033}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2109802736886557246 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 781958312774712079, guid: 172645ad4b4f67746862c66aef69c82b,
@@ -623,6 +665,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_TagString
       value: Star
+      objectReference: {fileID: 0}
+    - target: {fileID: 3513841473477903287, guid: 055a86e87f28be54488792db8dbb61d2,
+        type: 3}
+      propertyPath: m_SortingOrder
+      value: -1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 055a86e87f28be54488792db8dbb61d2, type: 3}

@@ -29,6 +29,9 @@ public class BrickObjectHandler : MonoBehaviour
     private delegate void AfterElevationAction(GameObject target);
     private AfterElevationAction afterElevationAction;
     private Vector3 targetStarPos;
+    private GameObject targetFlower;
+    private bool elevateTargetFlower = false;
+    public GameObject player;    
 
     void Start()
     {
@@ -82,6 +85,16 @@ public class BrickObjectHandler : MonoBehaviour
                                        "Star",
                                        AfterStarElevation);
         }
+
+        else if (elevateTargetFlower)
+        {
+            DoElevateObjectWhenSpawned(targetFlower,
+                                       targetStarPos,
+                                       mushroomElevationSpeed,
+                                       ref elevateTargetFlower,
+                                       "Flower",
+                                       AfterFlowerElevation);
+        }
     }
 
     void DoElevateObjectWhenSpawned(GameObject target,
@@ -96,7 +109,8 @@ public class BrickObjectHandler : MonoBehaviour
         {
             flag = false;
             target.tag = tag;
-            action(target);
+            if (action != null)
+                action(target);
         }
     }
 
@@ -113,6 +127,11 @@ public class BrickObjectHandler : MonoBehaviour
     void AfterStarElevation(GameObject target)
     {
         MakeObjectMoveable(target);
+    }
+
+    void AfterFlowerElevation(GameObject target)
+    {
+        target.GetComponent<Collider2D>().enabled = true;
     }
 
     void MakeObjectMoveable(GameObject target)
@@ -152,6 +171,13 @@ public class BrickObjectHandler : MonoBehaviour
         if (other.gameObject.tag == "Player" && other.contacts[0].normal.y > 0.5f)
         {
             ElevateBrick();
+            if (brickObjects == BrickObjects.Flower || brickObjects == BrickObjects.Star)
+            {
+                if (player.GetComponent<PlayerController>().getPlayerHealth() == 50)
+                {
+                    brickObjects = BrickObjects.RedMushroom;
+                }
+            }
             switch (brickObjects)
             {
                 case BrickObjects.Coin:
@@ -164,6 +190,7 @@ public class BrickObjectHandler : MonoBehaviour
                     break;
                 case BrickObjects.Flower:
                     GameObject flower = this.transform.GetChild(2).gameObject;
+                    targetFlower = SpawnObject(flower, false, true, ref elevateTargetFlower);
                     break;
                 case BrickObjects.RedMushroom:
                     GameObject mushroom = this.transform.GetChild(3).gameObject;

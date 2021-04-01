@@ -38,12 +38,12 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.5748171, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 12
+  serializedVersion: 11
   m_GIWorkflowMode: 1
   m_GISettings:
     serializedVersion: 2
@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_LightingSettings: {fileID: 0}
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -118,8 +118,6 @@ NavMeshSettings:
     manualTileSize: 0
     tileSize: 256
     accuratePlacement: 0
-    maxJobWorkers: 0
-    preserveTilesOutsideBounds: 0
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
@@ -219,6 +217,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2326348865898208101, guid: 090f824c2920f6e45a1b723f452e0007,
+        type: 3}
+      propertyPath: m_Constraints
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 6838705385604839266, guid: 090f824c2920f6e45a1b723f452e0007,
         type: 3}
       propertyPath: m_RootOrder
@@ -357,7 +360,6 @@ Light:
   m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
-  m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
 --- !u!4 &378655510
@@ -493,6 +495,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -2975162585805192556, guid: fa7df6e6144d58142b350b1c2185d22a,
+        type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 1739765077}
     - target: {fileID: -2975162585805192556, guid: fa7df6e6144d58142b350b1c2185d22a,
         type: 3}
       propertyPath: brickObjects
@@ -719,6 +726,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 43eae0cfe3ae6db41859058337a11208, type: 3}
+--- !u!1 &1739765077 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1884820162911305138, guid: 12573cd44ef686c41ab8df91d8863e5e,
+    type: 3}
+  m_PrefabInstance: {fileID: 1884820163533210478}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1798733538 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1884820162911305100, guid: 12573cd44ef686c41ab8df91d8863e5e,
@@ -735,6 +748,11 @@ PrefabInstance:
     - target: {fileID: 766747390598178197, guid: c5f7214b75a75204fb6a12e57b8bc7d1,
         type: 3}
       propertyPath: m_Name
+      value: Floor
+      objectReference: {fileID: 0}
+    - target: {fileID: 766747390598178197, guid: c5f7214b75a75204fb6a12e57b8bc7d1,
+        type: 3}
+      propertyPath: m_TagString
       value: Floor
       objectReference: {fileID: 0}
     - target: {fileID: 766747390598178200, guid: c5f7214b75a75204fb6a12e57b8bc7d1,
@@ -1016,6 +1034,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 22100000, guid: e74a1f39aebc7644486ed9dcbd380db3,
         type: 2}
+    - target: {fileID: 1884820162911305137, guid: 12573cd44ef686c41ab8df91d8863e5e,
+        type: 3}
+      propertyPath: m_Mass
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 1884820162911305138, guid: 12573cd44ef686c41ab8df91d8863e5e,
         type: 3}
       propertyPath: m_Name
@@ -1109,6 +1132,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2326348865898208101, guid: 090f824c2920f6e45a1b723f452e0007,
+        type: 3}
+      propertyPath: m_Constraints
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 6838705385604839266, guid: 090f824c2920f6e45a1b723f452e0007,
         type: 3}
       propertyPath: m_RootOrder

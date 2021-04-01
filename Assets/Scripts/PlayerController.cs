@@ -6,7 +6,7 @@ public class PlayerController : MonoBehaviour
     private bool dead = false;
     private float playerSpeed = 2.5f;
     private float jumpSpeed = 5f;
-    private int health = 50;
+    private int health;
     public GameObject cam;
     public Animator animator;
     public Sprite bigMarioSprite;
@@ -18,11 +18,17 @@ public class PlayerController : MonoBehaviour
     public RuntimeAnimatorController fireEnabledMario;
     private bool fireEnabled = false;
     public GameObject marioFire;
+    private bool harmless = false;
+    private Color originalPlayerColor;
+    private int colorSwap = 0;
 
     void Start()
     {
-        smallMarioSprite = GetComponent<SpriteRenderer>().sprite;
+        SpriteRenderer renderer = GetComponent<SpriteRenderer>();
+        smallMarioSprite = renderer.sprite;
+        originalPlayerColor = renderer.color;
         smallMarioAnimator = GetComponent<Animator>().runtimeAnimatorController;
+        health = 50;
     }
 
     void FixedUpdate()
@@ -73,13 +79,29 @@ public class PlayerController : MonoBehaviour
     {
         if (fireEnabled && Input.GetKeyDown(KeyCode.Z))
         {
-            GameObject fire = Instantiate(marioFire,
-                                          new Vector2(transform.position.x - 0.3f,
-                                          transform.position.y + 0.1f),
-                                          Quaternion.identity);
-            fire.GetComponent<Rigidbody2D>().AddForce(new Vector2(-2.6f, 0.6f) * 80);
+            Vector2 pos;
+            GameObject fire;
+            if (transform.rotation.y == -1)
+            {
+                pos = new Vector2(transform.position.x + 0.3f, transform.position.y + 0.1f);
+                fire = Instantiate(marioFire, pos, Quaternion.identity);
+                fire.GetComponent<Rigidbody2D>().AddForce(new Vector2(2.6f, 0.6f) * 80);
+            }
+            else
+            {
+                pos = new Vector2(transform.position.x - 0.3f, transform.position.y + 0.1f);
+                fire = Instantiate(marioFire, pos, Quaternion.identity);
+                fire.GetComponent<Rigidbody2D>().AddForce(new Vector2(-2.6f, 0.6f) * 80);
+            }
+
             StartCoroutine(PlayFireAnimation());
+            StartCoroutine(DestroyFire(fire));
         }
+    }
+
+    public int getPlayerHealth()
+    {
+        return health;
     }
 
     IEnumerator PlayFireAnimation()
@@ -89,33 +111,48 @@ public class PlayerController : MonoBehaviour
         animator.SetBool("moving", false);
     }
 
+    IEnumerator DestroyFire(GameObject fire)
+    {
+        yield return new WaitForSeconds(1);
+        Destroy(fire);
+    }
+
     void OnCollisionEnter2D(Collision2D col)
     {
         if (col.gameObject.tag == "Enemy" && this.gameObject.tag != "Invincible")
         {
-            // TODO: Keep constant for every enemy.
-            if (transform.position.y > 0.63f)
+            GameObject enemy = col.gameObject;
+            if (!harmless)
             {
-                GameObject enemy = col.gameObject;
-                enemy.GetComponent<Collider2D>().enabled = false;
-                enemy.GetComponent<Animator>().SetBool("isDead", true);
-                enemy.GetComponent<MoveObject>().stopMoving = true;
-                enemy.transform.position = new Vector2(enemy.transform.position.x, 0.23f);
+                // TODO: Keep constant for every enemy.
+                if (transform.position.y > 0.62f)
+                {
+                    enemy.GetComponent<Collider2D>().enabled = false;
+                    enemy.GetComponent<Animator>().SetBool("isDead", true);
+                    enemy.GetComponent<MoveObject>().stopMoving = true;
+                    enemy.transform.position = new Vector2(enemy.transform.position.x, 0.23f);
+                }
+                else
+                {
+                    if (health == 50)
+                    {
+                        dead = true;
+                        animator.SetBool("isDead", true);
+                        transform.Translate(Vector3.up * jumpSpeed * 5 * Time.deltaTime, Space.World);
+                        this.GetComponent<Collider2D>().enabled = false;
+                    }
+                    else if (health == 100)
+                    {
+                        DecreasePlayerHealth();
+                    }
+                }
             }
+
             else
             {
-                if (health == 50)
-                {
-                    dead = true;
-                    animator.SetBool("isDead", true);
-                    transform.Translate(Vector3.up * jumpSpeed * 5 * Time.deltaTime, Space.World);
-                    this.GetComponent<Collider2D>().enabled = false;
-                }
-                else if (health == 100)
-                {
-                    DecreasePlayerHealth();
-                }
+                marioFire.GetComponent<KillFromFire>().InvertedFall(enemy);
             }
+
         }
 
         else if (col.gameObject.tag == "RedMushroom")
@@ -132,6 +169,39 @@ public class PlayerController : MonoBehaviour
             Destroy(col.gameObject);
             GetComponent<Animator>().runtimeAnimatorController = fireEnabledMario;
             fireEnabled = true;
+        }
+
+        else if (col.gameObject.tag == "Flower")
+        {
+            Destroy(col.gameObject);
+            SpriteRenderer renderer = GetComponent<SpriteRenderer>();
+            harmless = true;
+            StartCoroutine(ColorBlink(renderer));
+        }
+    }
+
+    IEnumerator ColorBlink(SpriteRenderer renderer)
+    {
+        while (true)
+        {
+            if (colorSwap % 3 == 0)
+            {
+                renderer.color = Color.red;
+            }
+
+            else if (colorSwap % 3 == 1)
+            {
+                renderer.color = Color.green;
+            }
+
+            else if (colorSwap % 3 == 2)
+            {
+                renderer.color = Color.blue;
+            }
+
+            ++colorSwap;
+
+            yield return new WaitForSeconds(0.2f);
         }
     }
 
