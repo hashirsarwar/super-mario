@@ -2,13 +2,20 @@
 
 public class KillFromFire : MonoBehaviour
 {
+    public bool killOnlyOnce = true;
     private void OnCollisionEnter2D(Collision2D other)
     {
         if (other.gameObject.tag == "Enemy")
         {
             GameObject enemy = other.gameObject;
+            GameController.AddScore(200);
+            GetComponent<FloatingText>().display(enemy, "200");
+            // FloatingText.display(enemy, "200");
             InvertedFall(enemy);
-            Destroy(this.gameObject);
+            if (killOnlyOnce)
+            {
+                Destroy(this.gameObject);
+            }
         }
     }
 

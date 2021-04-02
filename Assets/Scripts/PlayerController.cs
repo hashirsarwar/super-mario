@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -21,6 +23,8 @@ public class PlayerController : MonoBehaviour
     private bool harmless = false;
     private Color originalPlayerColor;
     private int colorSwap = 0;
+    private bool firstFire2Coll = true;
+    public Text gameOver;
 
     void Start()
     {
@@ -119,7 +123,7 @@ public class PlayerController : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D col)
     {
-        if (col.gameObject.tag == "Enemy" && this.gameObject.tag != "Invincible")
+        if ((col.gameObject.tag == "Enemy" || col.gameObject.tag == "DeadEnemy") && this.gameObject.tag != "Invincible")
         {
             GameObject enemy = col.gameObject;
             if (!harmless)
@@ -127,21 +131,33 @@ public class PlayerController : MonoBehaviour
                 // TODO: Keep constant for every enemy.
                 if (transform.position.y > 0.62f)
                 {
-                    enemy.GetComponent<Animator>().SetBool("isDead", true);
-                    enemy.GetComponent<MoveObject>().stopMoving = true;
-                    enemy.transform.position = new Vector2(enemy.transform.position.x, 0.23f);
-                    if (enemy.name == "Enemy2")
+                    GetComponent<FloatingText>().display(enemy, "100");
+                    // FloatingText.display(enemy, "100");
+                    if (col.gameObject.tag == "Enemy")
                     {
-                        enemy.transform.position = new Vector3(transform.position.x, 0.28f, 0);
-                        enemy.tag = "Fire2";
-                        cam.GetComponent<CameraFollow>().setMoveCam(false);
-                        GetComponent<Rigidbody2D>().AddForce(new Vector2(150, 50), ForceMode2D.Impulse);
+                        enemy.GetComponent<Animator>().SetBool("isDead", true);
+                        enemy.GetComponent<MoveObject>().stopMoving = true;
+                        enemy.transform.position = new Vector2(enemy.transform.position.x, 0.23f);
+                        if (enemy.name == "Enemy2")
+                        {
+                            enemy.transform.position = new Vector3(transform.position.x, 0.28f, 0);
+                            enemy.tag = "Fire2";
+                            cam.GetComponent<CameraFollow>().setMoveCam(false);
+                            GetComponent<Rigidbody2D>().AddForce(new Vector2(150, 50), ForceMode2D.Impulse);
+                        }
+                        else
+                        {
+                            enemy.GetComponent<Collider2D>().enabled = false;
+                            StartCoroutine(DestroyEnemyObject(enemy));
+                        }
                     }
+
                     else
                     {
-                        enemy.GetComponent<Collider2D>().enabled = false;
-                        StartCoroutine(DestroyEnemyObject(enemy));
+                        marioFire.GetComponent<KillFromFire>().InvertedFall(enemy);
                     }
+
+                    GameController.AddScore(100);
                 }
                 else
                 {
@@ -151,6 +167,16 @@ public class PlayerController : MonoBehaviour
                         animator.SetBool("isDead", true);
                         transform.Translate(Vector3.up * jumpSpeed * 5 * Time.deltaTime, Space.World);
                         this.GetComponent<Collider2D>().enabled = false;
+                        GameController.MinusLife();
+                        if (GameController.lives == 0)
+                        {
+                            gameOver.text = "Game Over";
+                        }
+
+                        else
+                        {
+                            StartCoroutine(ResetGame());
+                        }
                     }
                     else if (health == 100)
                     {
@@ -161,7 +187,10 @@ public class PlayerController : MonoBehaviour
 
             else
             {
+                GetComponent<FloatingText>().display(enemy, "100");
+                // FloatingText.display(enemy, "100");
                 marioFire.GetComponent<KillFromFire>().InvertedFall(enemy);
+                GameController.AddScore(100);
             }
 
         }
@@ -172,6 +201,7 @@ public class PlayerController : MonoBehaviour
             if (health == 50)
             {
                 IncreasePlayerHealth();
+                GameController.AddScore(1000);
             }
         }
 
@@ -180,6 +210,7 @@ public class PlayerController : MonoBehaviour
             Destroy(col.gameObject);
             GetComponent<Animator>().runtimeAnimatorController = fireEnabledMario;
             fireEnabled = true;
+            GameController.AddScore(1000);
         }
 
         else if (col.gameObject.tag == "Flower")
@@ -189,7 +220,38 @@ public class PlayerController : MonoBehaviour
             harmless = true;
             StartCoroutine(ColorBlink(renderer));
             StartCoroutine(HarmlessLimit(renderer));
+            GameController.AddScore(1000);
         }
+
+        else if (col.gameObject.tag == "Fire2")
+        {
+            if (firstFire2Coll)
+            {
+                firstFire2Coll = false;
+                return;
+            }
+            else
+            {
+                GetComponent<FloatingText>().display(col.gameObject, "100");
+                firstFire2Coll = true;
+                col.gameObject.tag = "DeadEnemy";
+                KillFromFire scriptKill = col.gameObject.AddComponent<KillFromFire>();
+                FloatingText ftScript = col.gameObject.AddComponent<FloatingText>();
+                ftScript.prefab = (GameObject)Resources.Load("FloatingText", typeof(GameObject));
+                scriptKill.killOnlyOnce = false;
+                MoveObject scriptMove = col.gameObject.GetComponent<MoveObject>();
+                scriptMove.speed = 2.3f;
+                scriptMove.isDirectionLeft = true;
+                scriptMove.stopMoving = false;
+                GameController.AddScore(1000);
+            }
+        }
+    }
+
+    IEnumerator ResetGame()
+    {
+        yield return new WaitForSeconds(2);
+        SceneManager.LoadScene(0);
     }
 
     IEnumerator DestroyEnemyObject(GameObject enemy)

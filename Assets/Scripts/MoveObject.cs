@@ -45,6 +45,9 @@ public class MoveObject : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D col)
     {
+        if (gameObject.tag == "DeadEnemy" && col.gameObject.tag == "Enemy")
+            return;
+
         if (col.gameObject.tag != "Floor")
         {
             if (transform.position.y <= threshold)
