@@ -52,7 +52,7 @@ public class PlayerController : MonoBehaviour
             else if (Input.GetKey(KeyCode.RightArrow) && !dead)
             {
                 cam.GetComponent<CameraFollow>().setMoveCam(false);
-                if (transform.position.x - cam.transform.position.x < 2.7f)
+                if (transform.position.x - cam.transform.position.x < 3.8f)
                 {
                     transform.position += new Vector3(playerSpeed, 0, 0) * Time.deltaTime;
                     if (transform.rotation.y == 0)
@@ -127,10 +127,21 @@ public class PlayerController : MonoBehaviour
                 // TODO: Keep constant for every enemy.
                 if (transform.position.y > 0.62f)
                 {
-                    enemy.GetComponent<Collider2D>().enabled = false;
                     enemy.GetComponent<Animator>().SetBool("isDead", true);
                     enemy.GetComponent<MoveObject>().stopMoving = true;
                     enemy.transform.position = new Vector2(enemy.transform.position.x, 0.23f);
+                    if (enemy.name == "Enemy2")
+                    {
+                        enemy.transform.position = new Vector3(transform.position.x, 0.28f, 0);
+                        enemy.tag = "Fire2";
+                        cam.GetComponent<CameraFollow>().setMoveCam(false);
+                        GetComponent<Rigidbody2D>().AddForce(new Vector2(150, 50), ForceMode2D.Impulse);
+                    }
+                    else
+                    {
+                        enemy.GetComponent<Collider2D>().enabled = false;
+                        StartCoroutine(DestroyEnemyObject(enemy));
+                    }
                 }
                 else
                 {
@@ -177,12 +188,26 @@ public class PlayerController : MonoBehaviour
             SpriteRenderer renderer = GetComponent<SpriteRenderer>();
             harmless = true;
             StartCoroutine(ColorBlink(renderer));
+            StartCoroutine(HarmlessLimit(renderer));
         }
+    }
+
+    IEnumerator DestroyEnemyObject(GameObject enemy)
+    {
+        yield return new WaitForSeconds(1);
+        Destroy(enemy);
+    }
+
+    IEnumerator HarmlessLimit(SpriteRenderer renderer)
+    {
+        yield return new WaitForSeconds(8);
+        harmless = false;
+        renderer.color = originalPlayerColor;
     }
 
     IEnumerator ColorBlink(SpriteRenderer renderer)
     {
-        while (true)
+        while (harmless)
         {
             if (colorSwap % 3 == 0)
             {

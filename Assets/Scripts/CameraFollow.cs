@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
@@ -26,5 +24,15 @@ public class CameraFollow : MonoBehaviour
     public void setMoveCam(bool m)
     {
         moveCam = m;
+    }
+
+    public bool isCamMoving()
+    {
+        if (transform.hasChanged)
+        {
+            transform.hasChanged = false;
+            return true;
+        }
+        return false;
     }
 }

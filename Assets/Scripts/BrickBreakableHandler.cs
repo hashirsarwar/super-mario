@@ -11,14 +11,22 @@ public class BrickBreakableHandler : MonoBehaviour
     {
         particle = GetComponentInChildren<ParticleSystem>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-        boxCollider2D = GetComponent<BoxCollider2D>();        
+        boxCollider2D = GetComponent<BoxCollider2D>();
     }
 
-    private void OnCollisionEnter2D(Collision2D other) 
+    private void OnCollisionEnter2D(Collision2D other)
     {
         if (other.gameObject.tag == "Player" && other.contacts[0].normal.y > 0.5f)
         {
-            StartCoroutine(Break());
+            if (other.gameObject.GetComponent<PlayerController>().getPlayerHealth() == 100)
+            {
+                StartCoroutine(Break());
+            }
+
+            else
+            {
+                GetComponent<ElevateWhenHit>().Elevate();
+            }
         }
     }
 
@@ -28,6 +36,6 @@ public class BrickBreakableHandler : MonoBehaviour
         spriteRenderer.enabled = false;
         boxCollider2D.enabled = false;
         yield return new WaitForSeconds(particle.main.startLifetime.constantMax);
-        Destroy(gameObject); 
+        Destroy(gameObject);
     }
 }

@@ -12,9 +12,6 @@ public class BrickObjectHandler : MonoBehaviour
     public BrickObjects brickObjects;
     public int numOfCoins = 1;
     private Vector3 initPos;
-    private Vector3 targetPos;
-    private bool elevateBrick = false;
-    private bool liftDown = false;
     private GameObject targetCoin;
     private bool elevateTargetCoin = false;
     private Vector3 initCoinPos;
@@ -27,11 +24,14 @@ public class BrickObjectHandler : MonoBehaviour
     private bool elevateTargetStar = false;
     private GameObject targetStar;
     private delegate void AfterElevationAction(GameObject target);
-    private AfterElevationAction afterElevationAction;
     private Vector3 targetStarPos;
     private GameObject targetFlower;
     private bool elevateTargetFlower = false;
-    public GameObject player;    
+    public GameObject player;
+    private bool isEnabled = true;
+    public Sprite brickSolidSprite;
+    public Sprite brickBreakableSprite;
+    public bool isHidden = false;
 
     void Start()
     {
@@ -40,18 +40,25 @@ public class BrickObjectHandler : MonoBehaviour
             transform.GetChild(i).gameObject.SetActive(false);
         }
 
+        if (isHidden)
+        {
+            GetComponent<SpriteRenderer>().sprite = brickBreakableSprite;
+        }
+
         initPos = transform.position;
-        targetPos = transform.position + new Vector3(0, 0.1f, 0);
-        initCoinPos = targetPos + new Vector3(0, 0.15f, 0);
+        initCoinPos = transform.position + new Vector3(0, 0.25f, 0);
         targetCoinPos = initCoinPos + new Vector3(0, 0.4f, 0);
-        targetMushroomPos = targetPos + new Vector3(0, 0.2f, 0);
-        targetStarPos = targetPos + new Vector3(0, 0.23f, 0);
+        targetMushroomPos = transform.position + new Vector3(0, 0.3f, 0);
+        targetStarPos = transform.position + new Vector3(0, 0.33f, 0);
     }
 
     void Update()
     {
-        ElevateBrickWhenHit();
         ElevateObjectWhenSpawned();
+        if (!isEnabled)
+        {
+            GetComponent<SpriteRenderer>().sprite = brickSolidSprite;
+        }
     }
 
     void ElevateObjectWhenSpawned()
@@ -62,7 +69,7 @@ public class BrickObjectHandler : MonoBehaviour
                                        targetCoinPos,
                                        coinElevationSpeed,
                                        ref elevateTargetCoin,
-                                       null,
+                                       "Coin",
                                        AfterCoinElevation);
         }
 
@@ -109,8 +116,7 @@ public class BrickObjectHandler : MonoBehaviour
         {
             flag = false;
             target.tag = tag;
-            if (action != null)
-                action(target);
+            action(target);
         }
     }
 
@@ -141,36 +147,12 @@ public class BrickObjectHandler : MonoBehaviour
         target.GetComponent<Collider2D>().enabled = true;
     }
 
-    void ElevateBrickWhenHit()
-    {
-        if (elevateBrick)
-        {
-            transform.position = Vector3.MoveTowards(transform.position, targetPos, Time.deltaTime);
-            if (transform.position.y >= targetPos.y)
-            {
-                liftDown = true;
-                elevateBrick = false;
-            }
-        }
-
-        if (liftDown)
-        {
-            transform.position = Vector3.MoveTowards(transform.position, initPos, Time.deltaTime);
-            if (transform.position.y <= initPos.y)
-                liftDown = false;
-        }
-    }
-
-    void ElevateBrick()
-    {
-        elevateBrick = true;
-    }
-
     private void OnCollisionEnter2D(Collision2D other)
     {
-        if (other.gameObject.tag == "Player" && other.contacts[0].normal.y > 0.5f)
+        if (other.gameObject.tag == "Player" && other.contacts[0].normal.y > 0.5f && isEnabled)
         {
-            ElevateBrick();
+            // ElevateBrick();
+            GetComponent<ElevateWhenHit>().Elevate();
             if (brickObjects == BrickObjects.Flower || brickObjects == BrickObjects.Star)
             {
                 if (player.GetComponent<PlayerController>().getPlayerHealth() == 50)
@@ -178,23 +160,30 @@ public class BrickObjectHandler : MonoBehaviour
                     brickObjects = BrickObjects.RedMushroom;
                 }
             }
+
             switch (brickObjects)
             {
                 case BrickObjects.Coin:
                     GameObject coin = this.transform.GetChild(0).gameObject;
                     targetCoin = SpawnObject(coin, false, false, ref elevateTargetCoin);
+                    --numOfCoins;
+                    if (numOfCoins == 0)
+                        isEnabled = false;
                     break;
                 case BrickObjects.Star:
                     GameObject star = this.transform.GetChild(1).gameObject;
                     targetStar = SpawnObject(star, true, true, ref elevateTargetStar);
+                    isEnabled = false;
                     break;
                 case BrickObjects.Flower:
                     GameObject flower = this.transform.GetChild(2).gameObject;
                     targetFlower = SpawnObject(flower, false, true, ref elevateTargetFlower);
+                    isEnabled = false;
                     break;
                 case BrickObjects.RedMushroom:
                     GameObject mushroom = this.transform.GetChild(3).gameObject;
                     targetMushroom = SpawnObject(mushroom, true, true, ref elevateTargetMushroom);
+                    isEnabled = false;
                     break;
                 default:
                     return;
@@ -205,6 +194,7 @@ public class BrickObjectHandler : MonoBehaviour
     GameObject SpawnObject(GameObject gameObject, bool hasPhysics, bool hasCollider, ref bool flag)
     {
         GameObject targetObj = Instantiate(gameObject, initPos, Quaternion.identity);
+        targetObj.transform.localScale = new Vector3(2, 2, 1);
         targetObj.SetActive(true);
 
         if (hasPhysics)

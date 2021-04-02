@@ -38,6 +38,7 @@ GameObject:
   - component: {fileID: 2109802737371809385}
   - component: {fileID: 1735905574360115233}
   - component: {fileID: -2975162585805192556}
+  - component: {fileID: 7737762970922027605}
   m_Layer: 0
   m_Name: BrickObject
   m_TagString: Untagged
@@ -78,6 +79,7 @@ SpriteRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -155,6 +157,23 @@ MonoBehaviour:
   brickObjects: 0
   numOfCoins: 1
   player: {fileID: 1884820162911305138, guid: 12573cd44ef686c41ab8df91d8863e5e, type: 3}
+  brickSolidSprite: {fileID: 4210305635217951160, guid: 2b8670b111f61c4408e0a9d6e3798e93,
+    type: 3}
+  brickBreakableSprite: {fileID: -1178447899685405130, guid: 2b8670b111f61c4408e0a9d6e3798e93,
+    type: 3}
+  isHidden: 0
+--- !u!114 &7737762970922027605
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2109802737371809386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a19ed321f2cf064487e73f3490515ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!50 &1189875343684345082
 Rigidbody2D:
   serializedVersion: 4
@@ -297,12 +316,12 @@ PrefabInstance:
     - target: {fileID: 1826122484766945501, guid: 5e21bee15b9606c4bbc7794ee68e3806,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 2
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 1826122484766945501, guid: 5e21bee15b9606c4bbc7794ee68e3806,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 2
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 1826122484766945501, guid: 5e21bee15b9606c4bbc7794ee68e3806,
         type: 3}
@@ -413,12 +432,12 @@ PrefabInstance:
     - target: {fileID: 2004046518883207639, guid: 18cf5654d7c778146b09d772212785cf,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 2
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 2004046518883207639, guid: 18cf5654d7c778146b09d772212785cf,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 2
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 2004046518883207639, guid: 18cf5654d7c778146b09d772212785cf,
         type: 3}
@@ -513,12 +532,12 @@ PrefabInstance:
     - target: {fileID: 781958312774712079, guid: 172645ad4b4f67746862c66aef69c82b,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 2
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 781958312774712079, guid: 172645ad4b4f67746862c66aef69c82b,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 2
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 781958312774712079, guid: 172645ad4b4f67746862c66aef69c82b,
         type: 3}
@@ -599,12 +618,12 @@ PrefabInstance:
     - target: {fileID: 3513841473477903284, guid: 055a86e87f28be54488792db8dbb61d2,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 2
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 3513841473477903284, guid: 055a86e87f28be54488792db8dbb61d2,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 2
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 3513841473477903284, guid: 055a86e87f28be54488792db8dbb61d2,
         type: 3}
