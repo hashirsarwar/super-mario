@@ -25,6 +25,14 @@ public class PlayerController : MonoBehaviour
     private int colorSwap = 0;
     private bool firstFire2Coll = true;
     public Text gameOver;
+    public AudioClip mainMusic;
+    public AudioClip jumpAudio;
+    public AudioClip dieAudio;
+    public AudioClip killJumpAudio;
+    public AudioClip fireAudio;
+    public AudioClip flowerAudio;
+    public AudioClip powerupAudio;
+    private AudioSource[] audioSource;
 
     void Start()
     {
@@ -33,6 +41,17 @@ public class PlayerController : MonoBehaviour
         originalPlayerColor = renderer.color;
         smallMarioAnimator = GetComponent<Animator>().runtimeAnimatorController;
         health = 50;
+        audioSource = new AudioSource[7];
+
+        for (int i = 0; i < 7; ++i)
+        {
+            audioSource[i] = this.gameObject.AddComponent<AudioSource>();
+        }
+
+        audioSource[0].PlayOneShot(mainMusic);
+        audioSource[0].volume = 0.45f;
+        audioSource[1].volume = 0.5f;
+        audioSource[2].volume = 0.5f;
     }
 
     void FixedUpdate()
@@ -75,7 +94,11 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKey(KeyCode.Space))
         {
+            if (health == 100)
+                animator.SetBool("jumping", true);
             transform.Translate(Vector3.up * jumpSpeed * Time.deltaTime, Space.World);
+            if (!audioSource[1].isPlaying)
+                audioSource[1].PlayOneShot(jumpAudio);
         }
     }
 
@@ -97,6 +120,8 @@ public class PlayerController : MonoBehaviour
                 fire = Instantiate(marioFire, pos, Quaternion.identity);
                 fire.GetComponent<Rigidbody2D>().AddForce(new Vector2(-2.6f, 0.6f) * 80);
             }
+
+            audioSource[3].PlayOneShot(fireAudio);
 
             StartCoroutine(PlayFireAnimation());
             StartCoroutine(DestroyFire(fire));
@@ -123,6 +148,10 @@ public class PlayerController : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D col)
     {
+        if (health == 100 && animator.GetBool("jumping"))
+        {
+            animator.SetBool("jumping", false);
+        }
         if ((col.gameObject.tag == "Enemy" || col.gameObject.tag == "DeadEnemy") && this.gameObject.tag != "Invincible")
         {
             GameObject enemy = col.gameObject;
@@ -135,10 +164,11 @@ public class PlayerController : MonoBehaviour
                     // FloatingText.display(enemy, "100");
                     if (col.gameObject.tag == "Enemy")
                     {
+                        audioSource[4].PlayOneShot(killJumpAudio);
                         enemy.GetComponent<Animator>().SetBool("isDead", true);
                         enemy.GetComponent<MoveObject>().stopMoving = true;
                         enemy.transform.position = new Vector2(enemy.transform.position.x, 0.23f);
-                        if (enemy.name == "Enemy2")
+                        if (enemy.name.StartsWith("Enemy2"))
                         {
                             enemy.transform.position = new Vector3(transform.position.x, 0.28f, 0);
                             enemy.tag = "Fire2";
@@ -154,6 +184,7 @@ public class PlayerController : MonoBehaviour
 
                     else
                     {
+                        audioSource[4].PlayOneShot(killJumpAudio);
                         marioFire.GetComponent<KillFromFire>().InvertedFall(enemy);
                     }
 
@@ -164,6 +195,10 @@ public class PlayerController : MonoBehaviour
                     if (health == 50)
                     {
                         dead = true;
+                        
+                        audioSource[0].Stop();
+                        audioSource[2].PlayOneShot(dieAudio);
+
                         animator.SetBool("isDead", true);
                         transform.Translate(Vector3.up * jumpSpeed * 5 * Time.deltaTime, Space.World);
                         this.GetComponent<Collider2D>().enabled = false;
@@ -197,6 +232,8 @@ public class PlayerController : MonoBehaviour
 
         else if (col.gameObject.tag == "RedMushroom")
         {
+            GetComponent<FloatingText>().display(this.gameObject, "1000");
+            audioSource[5].PlayOneShot(powerupAudio);
             Destroy(col.gameObject);
             if (health == 50)
             {
@@ -208,18 +245,21 @@ public class PlayerController : MonoBehaviour
         else if (col.gameObject.tag == "Star")
         {
             Destroy(col.gameObject);
-            GetComponent<Animator>().runtimeAnimatorController = fireEnabledMario;
-            fireEnabled = true;
+            SpriteRenderer renderer = GetComponent<SpriteRenderer>();
+            harmless = true;
+            audioSource[0].Stop();
+            audioSource[0].PlayOneShot(flowerAudio);
+            StartCoroutine(ColorBlink(renderer));
+            StartCoroutine(HarmlessLimit(renderer));
             GameController.AddScore(1000);
         }
 
         else if (col.gameObject.tag == "Flower")
         {
+            audioSource[5].PlayOneShot(powerupAudio);
             Destroy(col.gameObject);
-            SpriteRenderer renderer = GetComponent<SpriteRenderer>();
-            harmless = true;
-            StartCoroutine(ColorBlink(renderer));
-            StartCoroutine(HarmlessLimit(renderer));
+            GetComponent<Animator>().runtimeAnimatorController = fireEnabledMario;
+            fireEnabled = true;
             GameController.AddScore(1000);
         }
 
@@ -232,6 +272,7 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
+                audioSource[4].PlayOneShot(killJumpAudio);
                 GetComponent<FloatingText>().display(col.gameObject, "100");
                 firstFire2Coll = true;
                 col.gameObject.tag = "DeadEnemy";
@@ -250,7 +291,7 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator ResetGame()
     {
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(3.5f);
         SceneManager.LoadScene(0);
     }
 
@@ -265,6 +306,8 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(8);
         harmless = false;
         renderer.color = originalPlayerColor;
+        audioSource[0].Stop();
+        audioSource[0].PlayOneShot(mainMusic);
     }
 
     IEnumerator ColorBlink(SpriteRenderer renderer)

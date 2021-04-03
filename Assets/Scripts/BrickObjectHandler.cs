@@ -32,6 +32,9 @@ public class BrickObjectHandler : MonoBehaviour
     public Sprite brickSolidSprite;
     public Sprite brickBreakableSprite;
     public bool isHidden = false;
+    private AudioSource audioSource;
+    public AudioClip coinSound;
+    public AudioClip elevationSound;
 
     void Start()
     {
@@ -50,6 +53,7 @@ public class BrickObjectHandler : MonoBehaviour
         targetCoinPos = initCoinPos + new Vector3(0, 0.4f, 0);
         targetMushroomPos = transform.position + new Vector3(0, 0.3f, 0);
         targetStarPos = transform.position + new Vector3(0, 0.33f, 0);
+        audioSource = this.gameObject.AddComponent<AudioSource>();
     }
 
     void Update()
@@ -151,11 +155,11 @@ public class BrickObjectHandler : MonoBehaviour
     {
         if (other.gameObject.tag == "Player" && other.contacts[0].normal.y > 0.5f && isEnabled)
         {
-            // ElevateBrick();
             GetComponent<ElevateWhenHit>().Elevate();
             if (brickObjects == BrickObjects.Flower || brickObjects == BrickObjects.Star)
             {
-                if (player.GetComponent<PlayerController>().getPlayerHealth() == 50)
+                int health = player.GetComponent<PlayerController>().getPlayerHealth();
+                if (health == 50 || health == 0)
                 {
                     brickObjects = BrickObjects.RedMushroom;
                 }
@@ -164,6 +168,7 @@ public class BrickObjectHandler : MonoBehaviour
             switch (brickObjects)
             {
                 case BrickObjects.Coin:
+                    audioSource.PlayOneShot(coinSound);
                     GameObject coin = this.transform.GetChild(0).gameObject;
                     targetCoin = SpawnObject(coin, false, false, ref elevateTargetCoin);
                     --numOfCoins;
@@ -171,16 +176,19 @@ public class BrickObjectHandler : MonoBehaviour
                         isEnabled = false;
                     break;
                 case BrickObjects.Star:
+                    audioSource.PlayOneShot(elevationSound);
                     GameObject star = this.transform.GetChild(1).gameObject;
                     targetStar = SpawnObject(star, true, true, ref elevateTargetStar);
                     isEnabled = false;
                     break;
                 case BrickObjects.Flower:
+                    audioSource.PlayOneShot(elevationSound);
                     GameObject flower = this.transform.GetChild(2).gameObject;
                     targetFlower = SpawnObject(flower, false, true, ref elevateTargetFlower);
                     isEnabled = false;
                     break;
                 case BrickObjects.RedMushroom:
+                    audioSource.PlayOneShot(elevationSound);
                     GameObject mushroom = this.transform.GetChild(3).gameObject;
                     targetMushroom = SpawnObject(mushroom, true, true, ref elevateTargetMushroom);
                     isEnabled = false;

@@ -6,12 +6,16 @@ public class BrickBreakableHandler : MonoBehaviour
     private ParticleSystem particle;
     private SpriteRenderer spriteRenderer;
     private BoxCollider2D boxCollider2D;
+    private AudioSource audioSource;
+    public AudioClip breakSound;
+    public AudioClip bumpSound;
 
     void Start()
     {
         particle = GetComponentInChildren<ParticleSystem>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         boxCollider2D = GetComponent<BoxCollider2D>();
+        audioSource = this.gameObject.AddComponent<AudioSource>();
     }
 
     private void OnCollisionEnter2D(Collision2D other)
@@ -20,11 +24,13 @@ public class BrickBreakableHandler : MonoBehaviour
         {
             if (other.gameObject.GetComponent<PlayerController>().getPlayerHealth() == 100)
             {
+                audioSource.PlayOneShot(breakSound);
                 StartCoroutine(Break());
             }
 
             else
             {
+                audioSource.PlayOneShot(bumpSound);
                 GetComponent<ElevateWhenHit>().Elevate();
             }
         }

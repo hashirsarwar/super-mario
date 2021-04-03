@@ -3,14 +3,16 @@
 public class KillFromFire : MonoBehaviour
 {
     public bool killOnlyOnce = true;
+    private AudioSource audioSource;
     private void OnCollisionEnter2D(Collision2D other)
     {
         if (other.gameObject.tag == "Enemy")
         {
             GameObject enemy = other.gameObject;
             GameController.AddScore(200);
-            GetComponent<FloatingText>().display(enemy, "200");
-            // FloatingText.display(enemy, "200");
+            audioSource = this.gameObject.AddComponent<AudioSource>();
+            AudioClip clip = (AudioClip)Resources.Load("smb_kick", typeof(AudioClip));
+            audioSource.PlayOneShot(clip);
             InvertedFall(enemy);
             if (killOnlyOnce)
             {
